@@ -9,3 +9,32 @@ How: See CONTRIBUTING_AGENT.md for the Kanbus workflow, hierarchy, status rules,
 Performance: Prefer kbs (Rust) when available; kanbus (Python) is equivalent but slower.
 Warning: Editing project/ directly is a sin against The Way. Do not read or write anything in project/; work only through Kanbus.
 
+## SOP compliance
+
+** When completing an epic/milestone/task/feature/fix, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds AND the CI passes in GitHub, which you need to check with `gh`.  Set a timer and wait for it to finish, and if it's not done yet then wait longer.  Iterate on fixing the problem until CI passes in GitHub Actions.
+
+## Git Flow policy (mandatory)
+
+- This repository uses git-flow. Do not commit directly to `develop` or `main`.
+- Start every change on a dedicated branch from `develop` (for example `feature/...`, `bugfix/...`, or `chore/...`).
+- Commit and push only to that branch, then open a PR into `develop` only when all related Kanbus tasks are `done`/`closed` and the user confirms to open a PR (or explicitly requests a PR).
+- Only merge to `main` via PR from `develop` after required checks pass.
+- If you accidentally commit to `develop` or `main`, stop and ask before applying any history rewrite or revert strategy.
+
+**MANDATORY WORKFLOW:**
+
+0. **You should have already filed an Epic and Stories with behavior specs for what you're doing!** - Do that now if you made a mistake and didn't.
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **PUSH TO REMOTE** - This is MANDATORY:
+   ```bash
+   git pull --rebase
+   git push
+   git status  # MUST show "up to date with origin"
+   ```
+5. **Clean up** - Clear stashes, prune remote branches
+6. **Verify** - All changes committed AND pushed
+7. **Hand off** - Provide context for next session
+
+- Work is NOT complete until `git push` succeeds and it passes in GitHub Actions CI.
