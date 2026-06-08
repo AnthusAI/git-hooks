@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Remove Co-Authored-By lines unless explicitly preserved
+# ALWAYS remove Co-Authored-By lines - no exceptions
 commit_msg_file="${1:?commit message file path is required}"
 
-# Check if user explicitly wants to keep co-author (via -m flag containing Co-Authored-By)
+# Strip Co-Authored-By lines unconditionally
+# This prevents AI tools, git templates, and users from adding co-author attribution
 if grep -q "Co-Authored-By:" "$commit_msg_file" 2>/dev/null; then
-  # Remove Co-Authored-By lines from the commit message
-  # This prevents AI tools and git templates from auto-adding them
   grep -v "^Co-Authored-By:" "$commit_msg_file" > "$commit_msg_file.tmp" || true
   mv "$commit_msg_file.tmp" "$commit_msg_file"
 fi
