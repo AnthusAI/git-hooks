@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Block direct pushes to protected branches (develop, main)
+# Git-flow requires feature branches → PR → develop
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [[ "$current_branch" == "develop" || "$current_branch" == "main" ]]; then
+  echo "ERROR: Direct push to '$current_branch' is not allowed." >&2
+  echo "" >&2
+  echo "Git-flow workflow requires:" >&2
+  echo "  1. Create a feature branch: git checkout -b feature/my-feature" >&2
+  echo "  2. Push feature branch: git push -u origin feature/my-feature" >&2
+  echo "  3. Open a PR to develop" >&2
+  echo "" >&2
+  echo "If you need to revert a bad commit already on $current_branch:" >&2
+  echo "  git revert HEAD && git push" >&2
+  exit 1
+fi
+
 # Block pushes when Kanbus artifact files are left uncommitted.
 # These artifacts are used to share task state across systems/users.
 status_output="$(git status --short)"
